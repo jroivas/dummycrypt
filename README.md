@@ -1,3 +1,5 @@
+# Dummy crypt
+
 Sometimes one does not need real cryptographically strong encryption,
 but just easy way to obfuscate data.
 
@@ -11,7 +13,7 @@ For example for obfuscating save file in a game, this is "good enough".
 To achieve best security level use long enough seed and long enough key.
 On optimal case key is as long as the encrypted data (or a bit longer).
 
-# Details
+## Details
 
  - Key is the encryption key. It's used as-is, and looped if necessary.
  - Seed is random seed, looped as well.
@@ -31,7 +33,7 @@ Decryption is almost the same:
  2. Go thorough message one byte at time
  3. `message_character = ((encrypted_character - key_char) ^ seed_char) % 256`
 
-## Analysis
+### Analysis
 
 Algorithm uses two simple ways to encrypt message:
 
@@ -54,7 +56,7 @@ REMARK: This should not EVER be considered as cryptographically safe.
 Use something like [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) instead.
 This is meant for simple, easy and fast encryptions, where breach of the data is not that crucial.
 
-# Building
+## Building
 
 To build C version you need [meson](http://mesonbuild.com/) and [ninja](https://ninja-build.org/).
 
