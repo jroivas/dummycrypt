@@ -31,7 +31,7 @@ Decryption is almost the same:
 
  1. Read seed (and seed length) from message
  2. Go thorough message one byte at time
- 3. `message_character = ((encrypted_character - key_char) ^ seed_char) % 256`
+ 3. `message_character = ((encrypted_character - key_char) % 256) ^ seed_char`
 
 ### Analysis
 
