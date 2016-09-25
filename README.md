@@ -53,3 +53,22 @@ However how this is build: first XOR then plus and modulus, causes cracking to b
 REMARK: This should not EVER be considered as cryptographically safe.
 Use something like [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) instead.
 This is meant for simple, easy and fast encryptions, where breach of the data is not that crucial.
+
+# Building
+
+To build C version you need [meson](http://mesonbuild.com/) and [ninja](https://ninja-build.org/).
+
+After that:
+
+    mkdir build
+    cd build
+    meson ..
+    ninja
+
+To test C version:
+
+    ./dummy_crypt "Message to be encrypted" "Your key!"
+
+To test Python version:
+
+    ./dummy.py "Message to be encrypted" "Your key!"

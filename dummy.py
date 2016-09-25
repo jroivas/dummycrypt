@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (c)2016 Jouni Roivas <jroivas@iki.fi>
 #  MIT license, see LICENSE
 
@@ -90,5 +91,5 @@ if __name__ == '__main__':
     e = dummy_crypt(msg, key)
     p = dummy_decrypt(e, key)
 
-    print (e + '\n')
-    print (p + '\n')
+    print (e)
+    print (p)
