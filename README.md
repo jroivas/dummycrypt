@@ -56,6 +56,12 @@ REMARK: This should not EVER be considered as cryptographically safe.
 Use something like [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) instead.
 This is meant for simple, easy and fast encryptions, where breach of the data is not that crucial.
 
+### Improvement ideas
+
+ 1. Calculate hash from your key (SHA256, SHA1, MD5, whatever, but do NOT use plain key)
+ 2. XOR whole crypted result with hash to hide seed, and to obfuscate result further
+ 3. On decryption calculate hash again, XOR and then proceed as normally
+
 ## Building
 
 To build C version you need [meson](http://mesonbuild.com/) and [ninja](https://ninja-build.org/).

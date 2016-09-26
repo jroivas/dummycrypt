@@ -46,7 +46,8 @@ uint32_t dummy_crypt_size(uint32_t len, uint32_t seed_len)
 {
     return (len + 1 + seed_len);
 }
-char *dummy_crypt(const char *src, uint32_t len, const char *key, uint32_t key_len, uint32_t seed_len)
+
+char *dummy_crypt_seed(const char *src, uint32_t len, const char *key, uint32_t key_len, uint32_t seed_len, uint8_t provide_seed_len)
 {
     assert(src != NULL);
     assert(key != NULL);
@@ -66,9 +67,11 @@ char *dummy_crypt(const char *src, uint32_t len, const char *key, uint32_t key_l
     uint32_t si = 0;
     uint32_t ki = 0;
 
-    // Write seed to buffer
     seed_len %= 256;
-    res[i++] = seed_len;
+    if (provide_seed_len == 1) {
+        // Write seed to buffer
+        res[i++] = seed_len;
+    }
     for (si = 0; si < seed_len; si++) {
         res[i++] = seed[si];
     }
@@ -89,7 +92,12 @@ char *dummy_crypt(const char *src, uint32_t len, const char *key, uint32_t key_l
     return res;
 }
 
-char *dummy_decrypt(const char *src, uint32_t len, const char *key, uint32_t key_len)
+char *dummy_crypt(const char *src, uint32_t len, const char *key, uint32_t key_len, uint32_t seed_len)
+{
+    return dummy_crypt_seed(src, len, key, key_len, seed_len, 1);
+}
+
+char *dummy_decrypt_seed(const char *src, uint32_t len, const char *key, uint32_t key_len, uint32_t seed_len)
 {
     assert(src != NULL);
     assert(key != NULL);
@@ -100,7 +108,9 @@ char *dummy_decrypt(const char *src, uint32_t len, const char *key, uint32_t key
     uint32_t si = 0;
     uint32_t ki = 0;
 
-    uint32_t seed_len = src[i++];
+    if (seed_len == 0) {
+        seed_len = src[i++];
+    }
     assert(seed_len > 0);
     assert((len - 1 - seed_len) > 0);
 
@@ -132,4 +142,9 @@ char *dummy_decrypt(const char *src, uint32_t len, const char *key, uint32_t key
 
     free(seed);
     return res;
+}
+
+char *dummy_decrypt(const char *src, uint32_t len, const char *key, uint32_t key_len)
+{
+    return dummy_decrypt_seed(src, len, key, key_len, 0);
 }
