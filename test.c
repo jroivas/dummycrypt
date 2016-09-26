@@ -34,7 +34,7 @@ int main(int argc, char **argv)
         printf("%.2X ", (uint8_t)m[i]);
     }
     printf("\n");
-    unsigned char *sha_key = SHA256((unsigned char*)argv[1], key_len, 0);
+    unsigned char *sha_key = SHA256((unsigned char*)argv[2], key_len, 0);
     for (uint32_t i = 0; i < s; ++i) {
         m[i] ^= sha_key[i % 32];
     }
