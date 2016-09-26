@@ -26,8 +26,9 @@ int main(int argc, char **argv)
     uint32_t seed = 10;
     uint32_t srclen = strlen(argv[1]) + 1;
     uint32_t key_len = strlen(argv[2]);
-    char *m = dummy_crypt_seed(argv[1], srclen, argv[2], key_len, seed, no_seed ? 0 : 1);
-    uint32_t s = dummy_crypt_size(srclen, seed);
+    char *orig = calloc(1, srclen);
+    char *m = dummy_crypt_seed(orig, srclen, argv[2], key_len, seed, no_seed ? 0 : 1);
+    uint32_t s = dummy_crypt_size_seed(srclen, seed, no_seed ? 0 : 1);
 #ifdef USE_SHA256
     printf("PreSHA256: ");
     for (uint32_t i = 0; i < s; ++i) {

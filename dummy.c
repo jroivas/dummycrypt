@@ -42,9 +42,14 @@ void __gen_seed(char *buf, uint32_t len)
     }
 }
 
+uint32_t dummy_crypt_size_seed(uint32_t len, uint32_t seed_len, uint32_t provide_seed_len)
+{
+    return (len + provide_seed_len + seed_len);
+}
+
 uint32_t dummy_crypt_size(uint32_t len, uint32_t seed_len)
 {
-    return (len + 1 + seed_len);
+    return dummy_crypt_size_seed(len, seed_len, 1);
 }
 
 char *dummy_crypt_seed(const char *src, uint32_t len, const char *key, uint32_t key_len, uint32_t seed_len, uint8_t provide_seed_len)
@@ -64,27 +69,21 @@ char *dummy_crypt_seed(const char *src, uint32_t len, const char *key, uint32_t 
     __gen_seed(seed, seed_len);
 
     uint32_t i = 0;
-    uint32_t si = 0;
-    uint32_t ki = 0;
 
     seed_len %= 256;
     if (provide_seed_len == 1) {
         // Write seed to buffer
         res[i++] = seed_len;
     }
-    for (si = 0; si < seed_len; si++) {
+    for (uint32_t si = 0; si < seed_len; si++) {
         res[i++] = seed[si];
     }
 
-    si = 0;
     // Crypt
     for (uint32_t mi = 0; mi < len; mi++) {
-        uint32_t d = (src[mi] ^ seed[si]);
-        d += key[ki];
+        uint32_t d = (src[mi] ^ seed[mi % seed_len]);
+        d += key[mi % key_len];
         res[i++] = d % 256;
-
-        ki = (ki + 1) % key_len;
-        si = (si + 1) % seed_len;
     }
 
     free(seed);
@@ -105,8 +104,6 @@ char *dummy_decrypt_seed(const char *src, uint32_t len, const char *key, uint32_
     assert(key_len > 0);
 
     uint32_t i = 0;
-    uint32_t si = 0;
-    uint32_t ki = 0;
 
     if (seed_len == 0) {
         seed_len = src[i++];
@@ -117,27 +114,23 @@ char *dummy_decrypt_seed(const char *src, uint32_t len, const char *key, uint32_
     char *seed = malloc(seed_len);
     assert(seed != NULL);
 
-    for (si = 0; si < seed_len; si++) {
+    for (uint32_t si = 0; si < seed_len; si++) {
         seed[si] = src[i++];
     }
 
     char *res = calloc(1, len - 1 - seed_len);
     assert(res != NULL);
 
-    si = 0;
     // Decrypt
     for (uint32_t mi = 0; mi < len - seed_len - 1; mi++) {
         uint32_t d = src[i++];
-        if (d < key[ki]) {
-            d = 256 - (key[ki] - d);
+        if (d < key[mi % key_len]) {
+            d = 256 - (key[mi % key_len] - d);
         } else {
-            d -= key[ki];
+            d -= key[mi % key_len];
         }
-        d ^= seed[si];
+        d ^= seed[mi % seed_len];
         res[mi] = d % 256;
-
-        ki = (ki + 1) % key_len;
-        si = (si + 1) % seed_len;
     }
 
     free(seed);
