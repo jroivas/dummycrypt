@@ -58,9 +58,12 @@ This is meant for simple, easy and fast encryptions, where breach of the data is
 
 ### Improvement ideas
 
+C implementation now has possibility to XOR with SHA256 key if OpenSSL is available.
+
  1. Calculate hash from your key (SHA256, SHA1, MD5, whatever, but do NOT use plain key)
  2. XOR whole crypted result with hash to hide seed, and to obfuscate result further
  3. On decryption calculate hash again, XOR and then proceed as normally
+
 
 ## Building
 
